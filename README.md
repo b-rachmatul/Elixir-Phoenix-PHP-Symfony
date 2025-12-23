@@ -49,12 +49,12 @@ curl -X POST http://localhost:4000/api/import
 doda 100 nowych użytkowników
 
 4. Przykładowe akcje curl dla Phoenix Api
-Akcja	Przykład curl
-Paginacja	curl "http://localhost:4000/api/users?page=2&page_size=10"
-Szczegóły	curl http://localhost:4000/api/users/1
-Tworzenie	curl -X POST http://localhost:4000/api/users -H "Content-Type: application/json" -d '{"user": {"first_name": "Adam", "last_name": "Mix", "gender": "male" "birthdate": "1995-05-05"}}'
-Edycja	curl -X PUT http://localhost:4000/api/users/1 -H "Content-Type: application/json" -d '{"user": {"first_name": "Zmienione"}}'
-Usuwanie	curl -X DELETE http://localhost:4000/api/users/1
+Akcja,Metoda,Endpoint,Przykład curl
+Paginacja,GET,/api/users,"curl ""http://localhost:4000/api/users?page=2&page_size=10"""
+Szczegóły,GET,/api/users/:id,curl http://localhost:4000/api/users/1
+Tworzenie,POST,/api/users,"curl -X POST http://localhost:4000/api/users -H ""Content-Type: application/json"" -d '{""user"": {""first_name"": ""Adam"", ""last_name"": ""Mix"", ""gender"": ""male"", ""birthdate"": ""1995-05-05""}}'"
+Edycja,PUT,/api/users/:id,"curl -X PUT http://localhost:4000/api/users/1 -H ""Content-Type: application/json"" -d '{""user"": {""first_name"": ""Zmienione""}}'"
+Usuwanie,DELETE,/api/users/:id,curl -X DELETE http://localhost:4000/api/users/1
 
 
 Dodatkowe rzeczy
@@ -71,4 +71,56 @@ Dodatkowe rzeczy
     /src - Kod źródłowy Symfony (Controllers & Services)
 
     /templates - Widoki Twig (UI)
+
+5. Pobieranie listy użytkowników (GET /api/users)
+```JSON
+
+{
+  "data": [
+    {
+      "id": 1,
+      "first_name": "Jan",
+      "last_name": "Kowalski",
+      "gender": "male",
+      "birthdate": "1990-01-01"
+    }
+  ],
+  "meta": {
+    "page": 1,               // Bieżąca strona
+    "page_size": 10,         // Liczba rekordów na stronę
+    "total_count": 50,       // Łączna liczba wszystkich rekordów w bazie
+    "total_pages": 5         // Łączna liczba stron
+  }
+}
+```
+
+Pobieranie/Tworzenie pojedynczego użytkownika (GET/POST /api/users/:id)
+
+W przypadku pojedynczego zasobu, obiekt użytkownika jest bezpośrednio zawarty w kluczu data:
+```JSON
+
+{
+  "data": {
+    "id": 1,
+    "first_name": "Jan",
+    "last_name": "Kowalski",
+    "gender": "male",
+    "birthdate": "1990-01-01"
+  }
+}
+```
+
+Obsługa błędów walidacji (Status 422 Unprocessable Entity)
+
+Jeśli dane nie przejdą walidacji w Elixirze (Ecto Changeset), API zwróci listę błędów pogrupowaną po polach:
+```JSON
+
+{
+  "errors": {
+    "first_name": ["can't be blank"],
+    "gender": ["is invalid"],
+    "birthdate": ["has invalid format"]
+  }
+}
+```
 
