@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{# user/index.html.twig #}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Zarządzanie Użytkownikami</h1>
+        <a href="{{ path('user_new') }}" class="btn btn-primary">
+            <i class="bi bi-person-plus-fill me-2"></i>Dodaj użytkownika
+        </a>
+    </div>
+
+    <div class="filter-section shadow-sm">
+        <form method="get" class="row g-3">
+            <div class="col-md-2">
+                <label class="form-label small fw-bold">Imię</label>
+                <input type="text" name="first_name" value="{{ filters.first_name }}" class="form-control form-control-sm" placeholder="np. Jan">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-bold">Nazwisko</label>
+                <input type="text" name="last_name" value="{{ filters.last_name }}" class="form-control form-control-sm" placeholder="np. Kowalski">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-bold">Płeć</label>
+                <select name="gender" class="form-select form-select-sm">
+                    <option value="">Wszystkie</option>
+                    <option value="male" {{ filters.gender == 'male' ? 'selected' }}>Mężczyzna</option>
+                    <option value="female" {{ filters.gender == 'female' ? 'selected' }}>Kobieta</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-bold">Od daty</label>
+                <input type="date" name="start_date" value="{{ filters.start_date }}" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-bold">Do daty</label>
+                <input type="date" name="end_date" value="{{ filters.end_date }}" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-2 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-dark btn-sm flex-grow-1">Szukaj</button>
+                <a href="{{ path('user_index') }}" class="btn btn-outline-secondary btn-sm">Reset</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">
+                            <a href="{{ path('user_index', filters|merge({'sort': 'id', 'direction': filters.direction == 'asc' ? 'desc' : 'asc'})) }}" class="text-decoration-none text-dark">
+                                ID {% if filters.sort == 'id' %}<i class="bi bi-sort-{{ filters.direction == 'asc' ? 'up' : 'down' }}"></i>{% endif %}
+                            </a>
+                        </th>
+                        <th>Użytkownik</th>
+                        <th>Płeć</th>
+                        <th>Data urodzenia</th>
+                        <th class="text-end pe-4">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td class="ps-4 text-muted">#{{ user.id }}</td>
+                            <td>
+                                <div class="fw-bold">{{ user.firstName }} {{ user.lastName }}</div>
+                            </td>
+                            <td>
+                                {% if user.gender == 'male' %}
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">Mężczyzna</span>
+                                {% else %}
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Kobieta</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.birthDate }}</td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ path('user_edit', {id: user.id}) }}" class="btn btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form action="{{ path('user_delete', {id: user.id}) }}" method="post" onsubmit="return confirm('Usunąć użytkownika?');" class="d-inline">
+                                        <button class="btn btn-outline-danger border-start-0">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="small text-muted">
+                    Strona <strong>{{ meta.page }}</strong> z <strong>{{ meta.total_pages }}</strong>
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item {{ meta.page <= 1 ? 'disabled' }}">
+                            <a class="page-link" href="{{ path('user_index', filters|merge({'page': meta.page - 1})) }}">Poprzednia</a>
+                        </li>
+                        <li class="page-item {{ meta.page >= meta.total_pages ? 'disabled' }}">
+                            <a class="page-link" href="{{ path('user_index', filters|merge({'page': meta.page + 1})) }}">Następna</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
