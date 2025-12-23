@@ -49,12 +49,14 @@ curl -X POST http://localhost:4000/api/import
 doda 100 nowych użytkowników
 
 4. Przykładowe akcje curl dla Phoenix Api
-Akcja | Metoda | Endpoint | Przykład curl
-Paginacja | GET | /api/users | "curl ""http://localhost:4000/api/users?page=2&page_size=10"""
-Szczegóły | GET | /api/users/:id | curl http://localhost:4000/api/users/1
-Tworzenie | POST | /api/users | "curl -X POST http://localhost:4000/api/users -H ""Content-Type: application/json"" -d '{""user"": {""first_name"": ""Adam"", ""last_name"": ""Mix"", ""gender"": ""male"", ""birthdate"": ""1995-05-05""}}'"
-Edycja | PUT | /api/users/:id | "curl -X PUT http://localhost:4000/api/users/1 -H ""Content-Type: application/json"" -d '{""user"": {""first_name"": ""Zmienione""}}'"
-Usuwanie | DELETE | /api/users/:id | curl -X DELETE http://localhost:4000/api/users/1
+
+| Akcja | Metoda | Endpoint | Przykład curl |
+| ----- | ------ | -------- | ------------- |
+| Paginacja | GET | /api/users | curl http://localhost:4000/api/users?page=2&page_size=10 |
+| Szczegóły | GET | /api/users/:id | curl http://localhost:4000/api/users/1 |
+| Tworzenie | POST | /api/users | curl -X POST http://localhost:4000/api/users -H "Content-Type: application/json" -d '{"user": {"first_name": "Adam", "last_name": "Mix","gender": "male", "birthdate": "1995-05-05"}}' |
+| Edycja | PUT | /api/users/:id | "curl -X PUT http://localhost:4000/api/users/1 -H "Content-Type: application/json" -d '{"user": {"first_name": "Zmienione"}}' |
+| Usuwanie | DELETE | /api/users/:id | curl -X DELETE http://localhost:4000/api/users/1 |
 
 
 Dodatkowe rzeczy
